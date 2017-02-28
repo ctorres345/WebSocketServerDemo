@@ -17,10 +17,11 @@ import javax.json.spi.JsonProvider;
 import javax.websocket.Session;
 
 import entities.Unit;
+import enums.WEB_SOCKET_ACTION;
 
 @ApplicationScoped
 public class ArmySessionHandler {
-	private int unitId = 0;
+	private int unitId = 1;
 	private final Set<Session> sessions = new HashSet<>();
 	private final Set<Unit> units = new HashSet<>();
 
@@ -29,14 +30,12 @@ public class ArmySessionHandler {
 		 * Se agrega la sesion
 		 */
 		sessions.add(session);
-		for (Unit unit : units) {
-			/**
-			 * Se envia la lista de unidades registradas al usuario recien
-			 * logueado
-			 */
-			JsonObject addMessage = createAddMessage(unit);
-			sendToSession(session, addMessage);
-		}
+		/**
+		 * Se envia la lista de unidades registradas al usuario recien
+		 * logueado
+		 */
+		JsonObject getMessage = createGetMessage();
+		sendToSession(session, getMessage);
 	}
 
 	public void removeSession(Session session) {
@@ -60,7 +59,7 @@ public class ArmySessionHandler {
 		if (unit != null) {
 			units.remove(unit);
 			JsonProvider provider = JsonProvider.provider();
-			JsonObject removeMessage = provider.createObjectBuilder().add("action", "remove").add("id", id).build();
+			JsonObject removeMessage = provider.createObjectBuilder().add("actionCode", WEB_SOCKET_ACTION.REMOVE.getCode()).add("id", id).build();
 			sendToAllConnectedSessions(removeMessage);
 		}
 	}
@@ -91,7 +90,7 @@ public class ArmySessionHandler {
 		JsonProvider provider = JsonProvider.provider();
 		JsonObject data = provider.createObjectBuilder().add("id", unit.getId())
 				.add("name", unit.getName()).add("classType", unit.getClassType()).build();
-		JsonObject addMessage = provider.createObjectBuilder().add("action", "add").add("data", data).build();
+		JsonObject addMessage = provider.createObjectBuilder().add("actionCode", WEB_SOCKET_ACTION.ADD.getCode()).add("data", data).build();
 		return addMessage;
 	}
 	
@@ -103,7 +102,7 @@ public class ArmySessionHandler {
 					.add("name", unit.getName()).add("classType", unit.getClassType()).build());
 		}
 		JsonArray array = data.build();
-		JsonObject getMessage = provider.createObjectBuilder().add("action", "get").add("data", array).build();
+		JsonObject getMessage = provider.createObjectBuilder().add("actionCode", WEB_SOCKET_ACTION.GET.getCode()).add("data", array).build();
 		return getMessage;
 	}
 

@@ -38,16 +38,16 @@ public class ArmyWebSocket {
 		System.out.println("json recibido : " + message);
 		try (JsonReader reader = Json.createReader(new StringReader(message))) {
 			JsonObject jsonMessage = reader.readObject();
-			if (WEB_SOCKET_ACTION.ADD.getCode() == Long.valueOf(jsonMessage.getString("action"))) {
+			int actionCode = jsonMessage.getInt("actionCode");
+			if (WEB_SOCKET_ACTION.ADD.getCode() == actionCode) {
 				Unit unit = new Unit();
-				unit.setId(sessionHandler.getUnits().size() + 1);
 				unit.setName(jsonMessage.getString("name"));
-				unit.setClassType(jsonMessage.getString("classType"));
+				unit.setClassType(jsonMessage.getInt("classType"));
 				sessionHandler.addUnit(unit);
-			}else if (WEB_SOCKET_ACTION.REMOVE.getCode() == Long.valueOf(jsonMessage.getString("action"))) {
+			}else if (WEB_SOCKET_ACTION.REMOVE.getCode() == actionCode) {
 				int id = (int) jsonMessage.getInt("id");
 				sessionHandler.removeUnit(id);
-			}else if (WEB_SOCKET_ACTION.GET.getCode() == Long.valueOf(jsonMessage.getString("action"))) {
+			}else if (WEB_SOCKET_ACTION.GET.getCode() == actionCode) {
 				sessionHandler.getCurrentUnits();
 			}else{
 				int id = (int) jsonMessage.getInt("id");

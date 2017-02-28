@@ -9,10 +9,10 @@ public class Unit implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private long id;
 	private String name;
-	private String classType;
+	private long classType;
 
 	
-	public Unit(long id, String name, String classType) {
+	public Unit(long id, String name, long classType) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -34,10 +34,10 @@ public class Unit implements Serializable{
 		this.name = name;
 	}
 	
-	public String getClassType() {
+	public long getClassType() {
 		return classType;
 	}
-	public void setClassType(String classType) {
+	public void setClassType(long classType) {
 		this.classType = classType;
 	}
 	@Override

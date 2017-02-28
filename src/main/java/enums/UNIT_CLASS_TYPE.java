@@ -36,6 +36,16 @@ public enum UNIT_CLASS_TYPE {
         public long getCode() {
             return 3;
         }
+    },LORD {
+        @Override
+        public String getDescription() {
+            return "Lord";
+        }
+
+        @Override
+        public long getCode() {
+            return 4;
+        }
     };
 
     public abstract String getDescription();
